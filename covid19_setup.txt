@@ -1,0 +1,30 @@
+Steps to create a virtual environment:
+--------------------------------------
+1. Find out Python3 version:
+python3 -V
+
+2. It should output something like:
+Python 3.7.4
+
+3.If required
+sudo apt install virtualenv
+
+4. Now run the following command to create a virtual environment
+virtualenv --no-site-packages --python=python3.7 covid19VirEnv
+
+5. To activate the the virtual environment run
+source covid19VirEnv/bin/activate
+
+6. To install dependencies run
+pip3 install pandas matplotlib tabulate plotly xlrd
+
+
+Steps to Run Covid Profiler:
+--------------------------
+1. To activate the the virtual environment run
+source covid19VirEnv/bin/activate
+
+2. To generate the graphs run
+python3 covid19ECDCProfiler.py <logFileName>
+
+python3 covid19ECDCProfiler.py COVID-19*.xls --country=China --all
