@@ -45,3 +45,6 @@ Limitations:
 1. Tested in Ubuntu 18.08 only
 2. The raw data excel sheet needs minor modification. Some of the entries in column NewDeaths is empty. Fill them with 0
 (Select filter next to the NewDeaths column, remove selection againt "Select All", select "Blanc". Now fill 0 (zero) againt all the blanc cells. Now click on the filter, and select all to bring it back to original view. Save the excel sheet)
+
+3. covid19ECDCProfiler_16Mar.py works with excel sheet 16 March and previous  dates
+covid19ECDCProfiler.py works with excel sheet 17 March and latest
