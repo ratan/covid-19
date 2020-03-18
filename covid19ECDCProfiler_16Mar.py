@@ -50,11 +50,11 @@ fname = args.FILENAME
 #CountryExpDf.append(df['CountryExp'])
 #print (CountryExpDf)
 #columns
-# DateRep   Day Month Year Cases Deaths Countries and territories GeoId
+# DateRep   CountryExp  NewConfCases  NewDeaths GeoId Gaul1Nuts1          EU
 dfCovidExcel = pd.read_excel(fname) 
 #print (dfCovidExcel)
-TotalCasesWW = dfCovidExcel['Cases'].sum()
-TotalDeathsWW = dfCovidExcel['Deaths'].sum()
+TotalCasesWW = dfCovidExcel['NewConfCases'].sum()
+TotalDeathsWW = dfCovidExcel['NewDeaths'].sum()
 
 fHTML = open('covid19_ECDC.html', 'w')
 fHTML.write('<html>')
@@ -67,7 +67,7 @@ if (args.country):
     #print ("Country Name: ",checkCountry)
     fHTML.write(f'Country Name:  {checkCountry}')
     fHTML.write('<p>')
-    dfCountry = dfCovidExcel.loc[dfCovidExcel['Countries and territories'] == checkCountry]
+    dfCountry = dfCovidExcel.loc[dfCovidExcel['CountryExp'] == checkCountry]
     #print (dfCountry)
 
     #Reverse Pandas Dataframe by Row
@@ -75,53 +75,43 @@ if (args.country):
     dfCountry = dfCountry.iloc[::-1]
     #print (dfCountry)
 
-    #plt.plot(dfCountry['DateRep'], dfCountry['fCases'])
+    #plt.plot(dfCountry['DateRep'], dfCountry['NewConfCases'])
     #plt.show()
-    MaxCase=dfCountry.loc[dfCountry['Cases'].idxmax()]
-    #print ("Max Case in a day: Date ", MaxCase.DateRep, " Case: ",MaxCase.Cases)
+    MaxNewCase=dfCountry.loc[dfCountry['NewConfCases'].idxmax()]
+    #print ("Max New Case in a day: Date ", MaxNewCase.DateRep, " Case: ",MaxNewCase.NewConfCases)
     fHTML.write('<p>')
-    fHTML.write(f'Max Case in a day: Date {MaxCase.DateRep}  Case:  {MaxCase.Cases}')
+    fHTML.write(f'Max New Case in a day: Date {MaxNewCase.DateRep}  Case:  {MaxNewCase.NewConfCases}')
 
-    MaxDeaths=dfCountry.loc[dfCountry['Deaths'].idxmax()]
-    #print ("Max Deaths in a day: Date ", MaxDeaths.DateRep, " Case: ",MaxDeaths.Deaths)
+    MaxNewDeaths=dfCountry.loc[dfCountry['NewDeaths'].idxmax()]
+    #print ("Max Deaths in a day: Date ", MaxNewDeaths.DateRep, " Case: ",MaxNewDeaths.NewDeaths)
     fHTML.write('<p>')
-    fHTML.write(f'Max Deaths in a day: Date {MaxDeaths.DateRep}  Case:  {MaxDeaths.Deaths}')
+    fHTML.write(f'Max Deaths in a day: Date {MaxNewDeaths.DateRep}  Case:  {MaxNewDeaths.NewDeaths}')
 
-    TotalCases=dfCountry['Cases'].sum()
-    TotalDeaths=dfCountry['Deaths'].sum()
+    TotalCases=dfCountry['NewConfCases'].sum()
+    TotalDeaths=dfCountry['NewDeaths'].sum()
 
     #Find cumulative sum
-    #Copy columns Cases and Deaths
-    dfCountryPlot = dfCountry[['Cases', 'Deaths']].copy()
+    #Copy columns NewConfCases and NewDeaths
+    dfCountryPlot = dfCountry[['NewConfCases', 'NewDeaths']].copy()
     dfCountryPlot = dfCountryPlot.cumsum(skipna=True)
     #print ("dfCountryPlot: ",dfCountryPlot)
 
     #Since cumulative sum for date will be wrong, i is taken from dfCountry
-    #plt.plot(dfCountry['DateRep'], dfCountryPlot['Cases'], linewidth=2)
-    #plt.plot(dfCountry['DateRep'], dfCountryPlot['Deaths'], linewidth=2, linestyle='--')
+    #plt.plot(dfCountry['DateRep'], dfCountryPlot['NewConfCases'], linewidth=2)
+    #plt.plot(dfCountry['DateRep'], dfCountryPlot['NewDeaths'], linewidth=2, linestyle='--')
     #plt.xticks(np.arange(min(dfCountry['DateRep']), max(dfCountry['DateRep']), 1.0))
     #plt.show()
 
     fig, ax = plt.subplots()
-    ax.plot(dfCountry['DateRep'], dfCountryPlot['Cases'], linewidth=2, label='Total Cases')
-    #ax.plot(dfCountry['DateRep'], dfCountryPlot['Deaths'], linewidth=2, linestyle='--', label='Total Deaths')
+    ax.plot(dfCountry['DateRep'], dfCountryPlot['NewConfCases'], linewidth=2, label='Total Cases')
+    ax.plot(dfCountry['DateRep'], dfCountryPlot['NewDeaths'], linewidth=2, linestyle='--', label='Total Deaths')
     ax.legend() #Add a legend
     tmpfile = BytesIO()
     fig.savefig(tmpfile, format='png')
     encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
-    html = '<p>Chart for Total Cases' + '<img src=\'data:image/png;base64,{}\'>'.format(encoded) + '</p>'
+    html = '<p>Chart for Total Cases and Total Deaths' + '<img src=\'data:image/png;base64,{}\'>'.format(encoded) + '</p>'
     #plt.show()
-    fHTML.write(html)
 
-    fig1, ax1 = plt.subplots()
-    #ax1.plot(dfCountry['DateRep'], dfCountryPlot['Cases'], linewidth=2, label='Total Cases')
-    ax1.plot(dfCountry['DateRep'], dfCountryPlot['Deaths'], linewidth=2, linestyle='--', label='Total Deaths')
-    ax1.legend() #Add a legend
-    tmpfile = BytesIO()
-    fig1.savefig(tmpfile, format='png')
-    encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
-    html = '<p>Chart for Total Deaths' + '<img src=\'data:image/png;base64,{}\'>'.format(encoded) + '</p>'
-    #plt.show()
     fHTML.write(html)
 
     fHTML.write('<p>')
@@ -138,26 +128,26 @@ fHTML.write(f'<b>World Wide: Total cases: {TotalCasesWW} Total Deaths: {TotalDea
 checkAllCountry=args.all
 #print (checkAllCountry)
 if (checkAllCountry==True):
-    #print (dfCovidExcel.Countries and territories.unique())
-    countryList = dfCovidExcel['Countries and territories'].unique()
+    #print (dfCovidExcel.CountryExp.unique())
+    countryList = dfCovidExcel.CountryExp.unique()
     #print ("No of Countries: ",len(countryList))
     fHTML.write('<p>')
     fHTML.write(f'No of Countries: {len(countryList)}')
-    dfFinal = pd.DataFrame(columns=['Country', 'Cases', 'Deaths', '% Death', 'Max Case a day', 'Max Death a day' ])
+    dfFinal = pd.DataFrame(columns=['Country', 'Total Cases', ' Total Deaths', '% Death', 'Max Case a day', 'Max Death a day' ])
     count = 0
     for myList in countryList:
-        dfCountry = dfCovidExcel.loc[dfCovidExcel['Countries and territories'] == myList]
+        dfCountry = dfCovidExcel.loc[dfCovidExcel['CountryExp'] == myList]
         dfCountry.fillna(0) #Replace all na/null data with 0
-        MaxCase=dfCountry.loc[dfCountry['Cases'].idxmax()]
-        MaxDeaths=dfCountry.loc[dfCountry['Deaths'].idxmax()]
-        TotalCases=dfCountry['Cases'].sum()
-        TotalDeaths=dfCountry['Deaths'].sum()
+        MaxNewCase=dfCountry.loc[dfCountry['NewConfCases'].idxmax()]
+        MaxNewDeaths=dfCountry.loc[dfCountry['NewDeaths'].idxmax()]
+        TotalCases=dfCountry['NewConfCases'].sum()
+        TotalDeaths=dfCountry['NewDeaths'].sum()
         percDeath = (TotalDeaths *100.00)/TotalCases
-        #print ("Country: ", myList, "Total cases: ",Cases, "Deaths: ", TotalDeaths)
-        dfFinal.loc[count] = [myList, TotalCases, TotalDeaths, percDeath, MaxCase.Cases, MaxDeaths.Deaths]
+        #print ("Country: ", myList, "Total cases: ",TotalCases, "Total deaths: ", TotalDeaths)
+        dfFinal.loc[count] = [myList, TotalCases, TotalDeaths, percDeath, MaxNewCase.NewConfCases, MaxNewDeaths.NewDeaths]
         count = count + 1
-    #dfFinal.sort_values(by='Cases', ascending=False, inplace=True)
-    dfFinalCopy = dfFinal.sort_values(by='Cases', ascending=False, ignore_index=True)
+    #dfFinal.sort_values(by='Total Cases', ascending=False, inplace=True)
+    dfFinalCopy = dfFinal.sort_values(by='Total Cases', ascending=False, ignore_index=True)
     #print (dfFinal)
     #print (dfFinalCopy)
     fHTML.write('<p>')
