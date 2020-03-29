@@ -16,7 +16,7 @@ virtualenv --no-site-packages --python=python3.7 covid19VirEnv
 source covid19VirEnv/bin/activate
 
 6. To install dependencies run
-pip3 install pandas matplotlib tabulate plotly xlrd
+pip3 install pandas matplotlib tabulate plotly xlrd requests
 
 
 Steps to Run Covid Profiler:
@@ -25,6 +25,27 @@ Steps to Run Covid Profiler:
 source covid19VirEnv/bin/activate
 
 2. To generate the graphs run
-python3 covid19ECDCProfiler.py <logFileName>
+python3 covid19ECDCProfiler.py --country=China
 
-python3 covid19ECDCProfiler.py COVID-19*.xls --country=China --all
+--------------------------
+Windows Setup
+--------------------------
+#Create Virtual env
+virtualenv --python=python3.8 covid19VirEnv
+
+#To activate the the virtual environment run
+covid19VirEnv\Scripts\activate
+
+#To install dependencies run
+pip install pandas matplotlib tabulate plotly xlrd requests
+
+#deactivate
+deactivate
+
+Steps to Run Covid Profiler:
+--------------------------
+1. To activate the the virtual environment run
+covid19VirEnv\Scripts\activate
+
+2. To generate the graphs run
+python covid19ECDCProfiler.py --country=China
