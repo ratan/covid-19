@@ -32,13 +32,12 @@ source covid19VirEnv/bin/activate
 2. To generate the graphs run
 python3 covid19ECDCProfiler.py <logFileName>
 
-python3 covid19ECDCProfiler.py COVID-19*.xls --country=China --all
-  all: this create data for all country in tabular format
-  country: input country name for which you want to see details data
+python3 covid19ECDCProfiler.py --country=China
+  country: input country name for which you want to see details data (optional parameter)
 
 Output:
 --------------------------
-1. Output HTML file (covid19_ECDC.html) is generated, which has all the data in tabular/text format.
+1. Output HTML file (covid19_ECDC_<YYYY-MM-DD>.html) is generated, which has all the data in tabular/text format.
 
 Limitations:
 --------------------------
@@ -48,3 +47,27 @@ Limitations:
 
 3. covid19ECDCProfiler_16Mar.py works with excel sheet 16 March and previous  dates
 covid19ECDCProfiler.py works with excel sheet 17 March and latest
+
+
+--------------------------
+Windows Setup
+--------------------------
+#Create Virtual env
+virtualenv --python=python3.8 covid19VirEnv
+
+#To activate the the virtual environment run
+covid19VirEnv\Scripts\activate
+
+#To install dependencies run
+pip install pandas matplotlib tabulate plotly xlrd requests
+
+#deactivate
+deactivate
+
+Steps to Run Covid Profiler:
+--------------------------
+1. To activate the the virtual environment run
+covid19VirEnv\Scripts\activate
+
+2. To generate the graphs run
+python covid19ECDCProfiler.py --country=China
