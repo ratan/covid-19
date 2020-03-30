@@ -52,16 +52,16 @@ covid19ECDCProfiler.py works with excel sheet 17 March and latest
 --------------------------
 Windows Setup
 --------------------------
-#Create Virtual env
+1. Create Virtual env
 virtualenv --python=python3.8 covid19VirEnv
 
-#To activate the the virtual environment run
+2. To activate the the virtual environment run
 covid19VirEnv\Scripts\activate
 
-#To install dependencies run
+3. To install dependencies run
 pip install pandas matplotlib tabulate plotly xlrd requests
 
-#deactivate
+4. deactivate
 deactivate
 
 Steps to Run Covid Profiler:
@@ -71,3 +71,5 @@ covid19VirEnv\Scripts\activate
 
 2. To generate the graphs run
 python covid19ECDCProfiler.py --country=China
+
+--country parameter is optional.
